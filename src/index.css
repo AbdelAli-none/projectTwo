@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme {
+  --spacing-sm-padding: 2rem;
+  --spacing-lg-padding: 4rem;
+  --spacing-xl-padding: 5rem;
+  --spacing-xl2-padding: 7rem;
+}
+
+@layer {
+  .container {
+    margin-inline: auto; /* permenant */
+    @apply px-4 /* Default */
+            sm:px-sm-padding
+            lg:px-lg-padding 
+            xl:px-xl-padding 
+            2xl:px-xl2-padding;
+  }
+}
