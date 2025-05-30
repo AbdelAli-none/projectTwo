@@ -21,7 +21,7 @@ const Modal = ({ isOpen, close, title, children }: IProps) => {
           <div className="flex min-h-full items-center justify-center p-4">
             <DialogPanel
               transition
-              className="w-full max-w-md rounded-xl p-6 bg-white duration-300 ease-out data-closed:transform-[scale(95%)] data-closed:opacity-0"
+              className="w-full max-w-md rounded-lg p-6 bg-white duration-300 ease-out data-closed:transform-[scale(95%)] data-closed:opacity-0"
             >
               {title && (
                 <DialogTitle
