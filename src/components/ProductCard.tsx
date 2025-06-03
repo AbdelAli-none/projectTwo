@@ -1,5 +1,6 @@
 import type { IProduct } from "../interfaces";
 import { txtSlicer } from "../utils/functions";
+import CircleColor from "./CircleColor";
 import Image from "./Image";
 import Button from "./ui/Button";
 
@@ -10,14 +11,8 @@ interface IProps {
 const ProductCard = ({ product }: IProps) => {
   const { title, description, imageURL, price, category, colors } = product;
 
-  const colorContainer = colors.map((color: string, idx) => {
-    return (
-      <span
-        key={idx}
-        className="w-5 h-5 rounded-full cursor-pointer"
-        style={{ backgroundColor: color }}
-      />
-    );
+  const colorContainer = colors.map((color: string) => {
+    return <CircleColor key={color} color={color} />;
   });
 
   return (
