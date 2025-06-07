@@ -7,7 +7,7 @@ interface IProps extends HTMLAttributes<HTMLSpanElement> {
 const CircleColor = ({ color, ...rest }: IProps) => {
   return (
     <span
-      className={`w-5 h-5 rounded-full cursor-pointer block z-10`}
+      className={`w-5 h-5 rounded-full cursor-pointer block`}
       style={{ backgroundColor: color }}
       {...rest}
     />

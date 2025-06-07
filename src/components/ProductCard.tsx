@@ -23,7 +23,7 @@ const ProductCard = ({ product }: IProps) => {
         className="rounded-md mb-2 w-full h-full"
       />
       <h3>{title}</h3>
-      <p className="text-gray-400 my-3 text-base">{txtSlicer(description)}</p>
+      <p className="text-gray-400 my-3 text-base h-18">{txtSlicer(description)}</p>
 
       <div className="flex flex-wrap items-center my-3 gap-1">
         {colorContainer}

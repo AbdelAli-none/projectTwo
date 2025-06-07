@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import ProductCard from "./components/ProductCard";
 import Modal from "./components/ui/Modal";
-import { colors, formInputsList, productList } from "./data";
+import { categories, colors, formInputsList, productList } from "./data";
 import Button from "./components/ui/Button";
 import Input from "./components/ui/Input";
 import type { IProduct } from "./interfaces";
@@ -9,6 +9,7 @@ import { productValidation } from "./validation";
 import ErrorMessage from "./components/ErrorMessage";
 import CircleColor from "./components/CircleColor";
 import { v4 as uuid } from "uuid";
+import Select from "./components/ui/Select";
 
 function App() {
   const defaultProductObj = {
@@ -33,6 +34,7 @@ function App() {
   });
   const [tempColors, setTempColors] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
 
   // Handler
   const closeModal = () => setIsOpen(false);
@@ -77,7 +79,12 @@ function App() {
     }
 
     setProducts((prev) => [
-      { ...product, id: uuid(), colors: tempColors },
+      {
+        ...product,
+        id: uuid(),
+        colors: tempColors,
+        category: selectedCategory,
+      },
       ...prev,
     ]);
 
@@ -135,9 +142,17 @@ function App() {
       <div className="m-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4 p-2 rounded-md">
         {renderProductsList}
       </div>
-      <Modal isOpen={isOpen} close={closeModal} title="Add A New Product">
+
+      {/* <Modal isOpen={isOpen} close={closeModal} title="Add A New Product">
         <form className="space-y-3" onSubmit={submitHandler}>
           {renderFormInputList}
+          <Select
+            selected={selectedCategory}
+            setSelected={setSelectedCategory}
+          />
+          <div className="flex flex-wrap items-center my-3 gap-1 [&>*:not(:last-child)]:me-1">
+            {renderProductColors}
+          </div>
           <div className="flex flex-wrap items-center my-3 gap-1 [&>*:not(:last-child)]:me-1">
             {tempColors.map((color, idx) => (
               <span
@@ -149,16 +164,49 @@ function App() {
               </span>
             ))}
           </div>
-          <div className="flex flex-wrap items-center my-3 gap-1 [&>*:not(:last-child)]:me-1">
-            {renderProductColors}
-          </div>
-
           <div className="flex items-center space-x-3">
             <Button className="bg-indigo-600 hover:bg-indigo-800">
               Sumbit
             </Button>
             <Button
               className="bg-gray-400 hover:bg-gray-500 w-full"
+              onClick={onCancel}
+            >
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </Modal> */}
+
+      <Modal isOpen={isOpen} close={closeModal} title="ADD A NEW PRODUCT">
+        <form className="space-y-3" onSubmit={submitHandler}>
+          {renderFormInputList}
+          <Select
+            selected={selectedCategory}
+            setSelected={setSelectedCategory}
+          />
+          <div className="flex items-center flex-wrap space-x-1">
+            {renderProductColors}
+          </div>
+          <div className="flex items-center flex-wrap space-x-1">
+            {tempColors.map((color) => (
+              <span
+                key={color}
+                className="p-1 mr-1 mb-1 text-xs rounded-md text-white"
+                style={{ backgroundColor: color }}
+              >
+                {color}
+              </span>
+            ))}
+          </div>
+
+          <div className="flex items-center space-x-3">
+            <Button className="bg-indigo-700 hover:bg-indigo-800">
+              Submit
+            </Button>
+            <Button
+              type="button"
+              className="bg-[#f5f5fa] hover:bg-gray-300 !text-black"
               onClick={onCancel}
             >
               Cancel
