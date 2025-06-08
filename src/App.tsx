@@ -26,6 +26,7 @@ function App() {
   // States
   const [products, setProducts] = useState<IProduct[]>(productList);
   const [product, setProduct] = useState<IProduct>(defaultProductObj);
+  const [productToEdit, setProductToEdit] = useState(defaultProductObj);
   const [errors, setErrors] = useState({
     title: "",
     description: "",
@@ -35,6 +36,8 @@ function App() {
   const [tempColors, setTempColors] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+
+  console.log(productToEdit);
 
   // Handler
   const closeModal = () => setIsOpen(false);
@@ -95,7 +98,11 @@ function App() {
 
   // Renders;
   const renderProductsList = products.map((product) => (
-    <ProductCard key={product.id} product={product} />
+    <ProductCard
+      key={product.id}
+      product={product}
+      setProductToEdit={setProductToEdit}
+    />
   ));
 
   const renderFormInputList = formInputsList.map((input) => (
@@ -143,13 +150,13 @@ function App() {
         {renderProductsList}
       </div>
 
-      {/* <Modal isOpen={isOpen} close={closeModal} title="Add A New Product">
+      <Modal isOpen={isOpen} close={closeModal} title="Add A New Product">
         <form className="space-y-3" onSubmit={submitHandler}>
-          {renderFormInputList}
           <Select
             selected={selectedCategory}
             setSelected={setSelectedCategory}
           />
+          {renderFormInputList}
           <div className="flex flex-wrap items-center my-3 gap-1 [&>*:not(:last-child)]:me-1">
             {renderProductColors}
           </div>
@@ -170,43 +177,6 @@ function App() {
             </Button>
             <Button
               className="bg-gray-400 hover:bg-gray-500 w-full"
-              onClick={onCancel}
-            >
-              Cancel
-            </Button>
-          </div>
-        </form>
-      </Modal> */}
-
-      <Modal isOpen={isOpen} close={closeModal} title="ADD A NEW PRODUCT">
-        <form className="space-y-3" onSubmit={submitHandler}>
-          {renderFormInputList}
-          <Select
-            selected={selectedCategory}
-            setSelected={setSelectedCategory}
-          />
-          <div className="flex items-center flex-wrap space-x-1">
-            {renderProductColors}
-          </div>
-          <div className="flex items-center flex-wrap space-x-1">
-            {tempColors.map((color) => (
-              <span
-                key={color}
-                className="p-1 mr-1 mb-1 text-xs rounded-md text-white"
-                style={{ backgroundColor: color }}
-              >
-                {color}
-              </span>
-            ))}
-          </div>
-
-          <div className="flex items-center space-x-3">
-            <Button className="bg-indigo-700 hover:bg-indigo-800">
-              Submit
-            </Button>
-            <Button
-              type="button"
-              className="bg-[#f5f5fa] hover:bg-gray-300 !text-black"
               onClick={onCancel}
             >
               Cancel

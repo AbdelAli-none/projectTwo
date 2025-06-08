@@ -6,14 +6,20 @@ import Button from "./ui/Button";
 
 interface IProps {
   product: IProduct;
+  setProductToEdit: (product: IProduct) => void;
 }
 
-const ProductCard = ({ product }: IProps) => {
+const ProductCard = ({ product, setProductToEdit }: IProps) => {
   const { title, description, imageURL, price, category, colors } = product;
 
   const colorContainer = colors.map((color: string) => {
     return <CircleColor key={color} color={color} />;
   });
+
+  // Hnadler
+  const onEdit = () => {
+    setProductToEdit(product);
+  };
 
   return (
     <div className="max-w-sm md-max-w-lg mx-auto md:mx-0 border border-indigo-200 rounded-md p-2 flex flex-col">
@@ -23,7 +29,9 @@ const ProductCard = ({ product }: IProps) => {
         className="rounded-md mb-2 w-full h-full"
       />
       <h3>{title}</h3>
-      <p className="text-gray-400 my-3 text-base h-18">{txtSlicer(description)}</p>
+      <p className="text-gray-400 my-3 text-base h-18">
+        {txtSlicer(description)}
+      </p>
 
       <div className="flex flex-wrap items-center my-3 gap-1">
         {colorContainer}
@@ -41,7 +49,7 @@ const ProductCard = ({ product }: IProps) => {
         </div>
       </div>
       <div className="flex items-center justify-between mt-5 space-x-2">
-        <Button className="bg-indigo-600" width="w-full">
+        <Button className="bg-indigo-600" width="w-full" onClick={onEdit}>
           EDIT
         </Button>
         <Button className="bg-red-600" width="w-full">
