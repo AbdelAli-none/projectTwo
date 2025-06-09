@@ -10,6 +10,7 @@ import ErrorMessage from "./components/ErrorMessage";
 import CircleColor from "./components/CircleColor";
 import { v4 as uuid } from "uuid";
 import Select from "./components/ui/Select";
+import type { ProductNameTypes } from "./types";
 
 function App() {
   const defaultProductObj = {
@@ -26,7 +27,9 @@ function App() {
   // States
   const [products, setProducts] = useState<IProduct[]>(productList);
   const [product, setProduct] = useState<IProduct>(defaultProductObj);
-  const [productToEdit, setProductToEdit] = useState(defaultProductObj);
+  const [productToEdit, setProductToEdit] =
+    useState<IProduct>(defaultProductObj);
+  const [productToEditIdx, setProductToEditIdx] = useState<number>(0);
   const [errors, setErrors] = useState({
     title: "",
     description: "",
@@ -35,19 +38,35 @@ function App() {
   });
   const [tempColors, setTempColors] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
-
-  console.log(productToEdit);
 
   // Handler
   const closeModal = () => setIsOpen(false);
   const openModal = () => setIsOpen(true);
+
+  const closeEditModal = () => setIsOpenEditModal(false);
+  const openEditModal = () => setIsOpenEditModal(true);
 
   const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
 
     setProduct({
       ...product,
+      [name]: value,
+    });
+
+    setErrors({
+      ...errors,
+      [name]: "",
+    });
+  };
+
+  const onChangeEditHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = event.target;
+
+    setProductToEdit({
+      ...productToEdit,
       [name]: value,
     });
 
@@ -96,12 +115,43 @@ function App() {
     closeModal();
   };
 
+  const submitEditHandler = (event: FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+
+    const { title, description, imageURL, price } = productToEdit;
+
+    const errors = productValidation({
+      title,
+      description,
+      imageURL,
+      price,
+    });
+
+    // check if any property has a value of "" && check if all properties have a value of ""
+    const isError = !Object.values(errors).every((error) => error === "");
+    if (isError) {
+      setErrors(errors);
+      return;
+    }
+
+    const updatedProduct = [...products];
+    updatedProduct[productToEditIdx] = productToEdit;
+    setProducts(updatedProduct);
+
+    setProductToEdit(defaultProductObj);
+    setTempColors([]);
+    closeEditModal();
+  };
+
   // Renders;
-  const renderProductsList = products.map((product) => (
+  const renderProductsList = products.map((product, idx) => (
     <ProductCard
       key={product.id}
       product={product}
       setProductToEdit={setProductToEdit}
+      openEditModal={openEditModal}
+      idx={idx}
+      setProductToEditIdx={setProductToEditIdx}
     />
   ));
 
@@ -117,7 +167,7 @@ function App() {
         type="text"
         id={input.id}
         name={input.name}
-        value={product[input.name]}
+        value={product[input.name]} // after update it by [name]: value, above
         onChange={onChangeHandler}
       />
       <ErrorMessage msg={errors[input.name]} />
@@ -138,6 +188,31 @@ function App() {
     />
   ));
 
+  const renderProductEditWithErrorMsg = (
+    id: string,
+    label: string,
+    name: ProductNameTypes
+  ) => {
+    return (
+      <div className="flex flex-col">
+        <label
+          htmlFor={id}
+          className="mb-[2px] text-sm font-medium text-gray-700"
+        >
+          {label}
+        </label>
+        <Input
+          type="text"
+          id={id}
+          name={name}
+          value={productToEdit[name]}
+          onChange={onChangeEditHandler}
+        />
+        <ErrorMessage msg={errors[name]} />
+      </div>
+    );
+  };
+
   return (
     <main className="container">
       <Button
@@ -150,6 +225,7 @@ function App() {
         {renderProductsList}
       </div>
 
+      {/* Add product */}
       <Modal isOpen={isOpen} close={closeModal} title="Add A New Product">
         <form className="space-y-3" onSubmit={submitHandler}>
           <Select
@@ -171,6 +247,58 @@ function App() {
               </span>
             ))}
           </div>
+          <div className="flex items-center space-x-3">
+            <Button className="bg-indigo-600 hover:bg-indigo-800">
+              Sumbit
+            </Button>
+            <Button
+              className="bg-gray-400 hover:bg-gray-500 w-full"
+              onClick={onCancel}
+            >
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* Edit product */}
+      <Modal
+        isOpen={isOpenEditModal}
+        close={closeEditModal}
+        title="EDIT THIS PRODUCT"
+      >
+        <form className="space-y-3" onSubmit={submitEditHandler}>
+          {renderProductEditWithErrorMsg("title", "Product Title", "title")}
+          {renderProductEditWithErrorMsg(
+            "description",
+            "Product Description",
+            "description"
+          )}
+          {renderProductEditWithErrorMsg(
+            "Image URL",
+            "Product Image URL",
+            "imageURL"
+          )}
+          {renderProductEditWithErrorMsg("Price", "Product Price", "price")}
+          {/* <Select
+            selected={selectedCategory}
+            setSelected={setSelectedCategory}
+          /> */}
+          {/* {renderFormInputList} */}
+          {/* <div className="flex flex-wrap items-center my-3 gap-1 [&>*:not(:last-child)]:me-1">
+            {renderProductColors}
+          </div> */}
+          {/* <div className="flex flex-wrap items-center my-3 gap-1 [&>*:not(:last-child)]:me-1">
+            {tempColors.map((color, idx) => (
+              <span
+                key={idx}
+                className="p-1 font-bold text-white text-xs rounded-lg"
+                style={{ backgroundColor: color }}
+              >
+                {color}
+              </span>
+            ))}
+          </div> */}
           <div className="flex items-center space-x-3">
             <Button className="bg-indigo-600 hover:bg-indigo-800">
               Sumbit

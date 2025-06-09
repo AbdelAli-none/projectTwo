@@ -7,9 +7,18 @@ import Button from "./ui/Button";
 interface IProps {
   product: IProduct;
   setProductToEdit: (product: IProduct) => void;
+  openEditModal: () => void;
+  idx: number;
+  setProductToEditIdx: (value: number) => void;
 }
 
-const ProductCard = ({ product, setProductToEdit }: IProps) => {
+const ProductCard = ({
+  product,
+  setProductToEdit,
+  openEditModal,
+  idx,
+  setProductToEditIdx,
+}: IProps) => {
   const { title, description, imageURL, price, category, colors } = product;
 
   const colorContainer = colors.map((color: string) => {
@@ -19,6 +28,8 @@ const ProductCard = ({ product, setProductToEdit }: IProps) => {
   // Hnadler
   const onEdit = () => {
     setProductToEdit(product);
+    openEditModal();
+    setProductToEditIdx(idx);
   };
 
   return (
