@@ -135,12 +135,15 @@ function App() {
     }
 
     const updatedProduct = [...products];
-    updatedProduct[productToEditIdx] = productToEdit;
+    updatedProduct[productToEditIdx] = {
+      ...productToEdit,
+      colors: tempColors.concat(productToEdit.colors),
+    };
     setProducts(updatedProduct);
-
     setProductToEdit(defaultProductObj);
-    setTempColors([]);
     closeEditModal();
+    setTempColors([]);
+    return;
   };
 
   // Renders;
@@ -180,6 +183,11 @@ function App() {
       color={color}
       onClick={() => {
         if (tempColors.includes(color)) {
+          setTempColors((prev) => prev.filter((item) => item !== color));
+          return;
+        }
+
+        if (productToEdit.colors.includes(color)) {
           setTempColors((prev) => prev.filter((item) => item !== color));
           return;
         }
@@ -268,6 +276,12 @@ function App() {
         title="EDIT THIS PRODUCT"
       >
         <form className="space-y-3" onSubmit={submitEditHandler}>
+          <Select
+            selected={productToEdit.category}
+            setSelected={(value) =>
+              setProductToEdit({ ...productToEdit, category: value })
+            }
+          />
           {renderProductEditWithErrorMsg("title", "Product Title", "title")}
           {renderProductEditWithErrorMsg(
             "description",
@@ -280,16 +294,12 @@ function App() {
             "imageURL"
           )}
           {renderProductEditWithErrorMsg("Price", "Product Price", "price")}
-          {/* <Select
-            selected={selectedCategory}
-            setSelected={setSelectedCategory}
-          /> */}
-          {/* {renderFormInputList} */}
-          {/* <div className="flex flex-wrap items-center my-3 gap-1 [&>*:not(:last-child)]:me-1">
+
+          <div className="flex flex-wrap items-center my-3 gap-1 [&>*:not(:last-child)]:me-1">
             {renderProductColors}
-          </div> */}
-          {/* <div className="flex flex-wrap items-center my-3 gap-1 [&>*:not(:last-child)]:me-1">
-            {tempColors.map((color, idx) => (
+          </div>
+          <div className="flex flex-wrap items-center my-3 gap-1 [&>*:not(:last-child)]:me-1">
+            {tempColors.concat(productToEdit.colors).map((color, idx) => (
               <span
                 key={idx}
                 className="p-1 font-bold text-white text-xs rounded-lg"
@@ -298,13 +308,13 @@ function App() {
                 {color}
               </span>
             ))}
-          </div> */}
+          </div>
           <div className="flex items-center space-x-3">
-            <Button className="bg-indigo-600 hover:bg-indigo-800">
+            <Button className="bg-indigo-600 hover:bg-indigo-700">
               Sumbit
             </Button>
             <Button
-              className="bg-gray-400 hover:bg-gray-500 w-full"
+              className="bg-gray-300 hover:bg-gray-400 w-full"
               onClick={onCancel}
             >
               Cancel

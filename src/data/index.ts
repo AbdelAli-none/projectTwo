@@ -107,7 +107,7 @@ export const productList: IProduct[] = [
     imageURL:
       "https://images.unsplash.com/photo-1583121274602-3e2820c69888?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
     price: "500000",
-    colors: ["#FF0032", "#2563eb", "#FF6E31"],
+    colors: [],
     category: {
       name: "Cars",
       imageURL:

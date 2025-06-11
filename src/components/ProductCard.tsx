@@ -1,5 +1,5 @@
 import type { IProduct } from "../interfaces";
-import { txtSlicer } from "../utils/functions";
+import { addCommaToPrice, txtSlicer } from "../utils/functions";
 import CircleColor from "./CircleColor";
 import Image from "./Image";
 import Button from "./ui/Button";
@@ -49,21 +49,27 @@ const ProductCard = ({
       </div>
 
       <div className="flex items-center justify-between">
-        <span className="text-indigo-500 font-bold">${price}</span>
+        <span className="text-indigo-500 font-bold">
+          ${addCommaToPrice(price)}
+        </span>
         <div className="category flex items-center">
+          <span className="me-2">{category.name}</span>
           <Image
             imageURL={category.imageURL}
             alt={category.name}
-            className="w-10 h-10 rounded-full me-2"
+            className="w-10 h-10 rounded-full"
           />
-          <span>{category.name}</span>
         </div>
       </div>
       <div className="flex items-center justify-between mt-5 space-x-2">
-        <Button className="bg-indigo-600" width="w-full" onClick={onEdit}>
+        <Button
+          className="bg-indigo-600 hover:bg-indigo-700"
+          width="w-full"
+          onClick={onEdit}
+        >
           EDIT
         </Button>
-        <Button className="bg-red-600" width="w-full">
+        <Button className="bg-red-600 hover:bg-red-700" width="w-full">
           DELETE
         </Button>
       </div>
